@@ -3,34 +3,63 @@ using UnityEngine;
 
 public class LevelGenerator : MonoBehaviour
 {
-    public GameObject[] InitialsegmentPrefab;
-    public GameObject[] SegmentPrefabs;
+    public LevelSegment initialSegment;
+    public LevelSegment[] segmentPrefabs;
     public int maxSegments = 10;
-    public float segmentSize = 10f;
 
-    private GameObject currentSegment;
+    private LevelSegment currentSegment;
+    private HashSet<Vector3> occupiedPositions = new HashSet<Vector3>();
+    public float segmentSize = 10f; // tamaño de cada casilla
 
     void Start()
     {
-        // Instanciar el inicial
-        currentSegment = Instantiate(SegmentPrefabs[0], Vector3.zero, Quaternion.identity);
+        currentSegment = Instantiate(initialSegment, Vector3.zero, Quaternion.identity);
+        occupiedPositions.Add(Vector3.zero);
 
-        // Generar el resto
         for (int i = 1; i < maxSegments; i++)
         {
-            LevelSegment segScript = currentSegment.GetComponent<LevelSegment>();
-            LevelSegment.Direction nextDir = segScript.GetNextDirection();
+            LevelSegment SelectedSegment = currentSegment;
+            LevelSegment.Direction nextDir = SelectedSegment.GetNextDirection();
+            SectionEntrance currentEntrance = SelectedSegment.GetEntrance(nextDir);
 
-            Vector3 newPos = currentSegment.transform.position + segScript.GetOffset(nextDir, segmentSize);
+            // Instanciar nuevo segmento
+            LevelSegment newSegment = Instantiate(
+                segmentPrefabs[Random.Range(0, segmentPrefabs.Length)],
+                Vector3.zero,
+                Quaternion.identity
+            );
 
-            GameObject newSegment = Instantiate(SegmentPrefabs[Random.Range(0, SegmentPrefabs.Length)], newPos, Quaternion.identity);
+            var oppositeDirection = newSegment.Opposite(nextDir);
+            SectionEntrance newEntrance = newSegment.GetEntrance(oppositeDirection);
 
-            // Configurar dirección de entrada del nuevo segmento
-            LevelSegment newSegScript = newSegment.GetComponent<LevelSegment>();
-            newSegScript.incomingDirection = nextDir;
+            // Posicionar
+            newSegment.SetPositionToEntrance(currentEntrance, newEntrance);
 
+            // Verificar si ya está ocupado
+            Vector3 gridPos = RoundToGrid(newSegment.transform.position);
+            if (occupiedPositions.Contains(gridPos))
+            {
+                Destroy(newSegment.gameObject); // cancelar si ya hay algo
+                continue;
+            }
+
+            occupiedPositions.Add(gridPos);
+
+            // Marcar sockets
+            currentEntrance.UseEntrance();
+            newEntrance.UseEntrance();
+
+            newSegment.incomingDirection = oppositeDirection;
             currentSegment = newSegment;
         }
     }
 
+    Vector3 RoundToGrid(Vector3 pos)
+    {
+        return new Vector3(
+            Mathf.Round(pos.x / segmentSize) * segmentSize,
+            Mathf.Round(pos.y / segmentSize) * segmentSize,
+            Mathf.Round(pos.z / segmentSize) * segmentSize
+        );
+    }
 }

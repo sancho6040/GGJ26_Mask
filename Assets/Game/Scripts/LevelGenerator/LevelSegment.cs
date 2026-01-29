@@ -1,12 +1,14 @@
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class LevelSegment : MonoBehaviour
 {
-    // Direcciones posibles
-    public enum Direction { Forward, Back, Left, Right }
+    public SectionEntrance forwardEntrance;
+    public SectionEntrance backEntrance;
+    public SectionEntrance leftEntrance;
+    public SectionEntrance rightEntrance;
 
-    // Dirección desde la que vino el segmento anterior
+    public enum Direction { Forward, Back, Left, Right }
     public Direction? incomingDirection = null;
 
     // Devuelve una dirección aleatoria válida
@@ -20,18 +22,56 @@ public class LevelSegment : MonoBehaviour
             Direction.Right
         };
 
-        // Excluir la dirección de entrada
+        // Excluir dirección de entrada
         if (incomingDirection.HasValue)
         {
-            possible.Remove(Opposite(incomingDirection.Value));
+            var oppositeDirection = Opposite(incomingDirection.Value);
+            possible.Remove(oppositeDirection);
+            print($"{incomingDirection} -> {oppositeDirection}");
         }
 
-        // Seleccionar aleatoria
-        return possible[Random.Range(0, possible.Count)];
+        // Excluir sockets ya usados
+        possible.RemoveAll(dir => GetEntrance(dir).isUsed);
+
+        print($"{gameObject.name} - posibble values: ");
+        foreach (var item in possible)
+        {
+            print(possible.ToString());
+        }
+
+        return possible.Count > 0 ? possible[Random.Range(0, possible.Count)] : incomingDirection.Value;
     }
 
-    // Función auxiliar para obtener la dirección opuesta
-    private Direction Opposite(Direction dir)
+    // Ajusta la posición y rotación del segmento para que su socket coincida con otro socket
+    public void SetPositionToEntrance(SectionEntrance targetEntrance, SectionEntrance myEntrance)
+    {
+        // Calcula la diferencia de rotación
+        Quaternion rotationOffset = Quaternion.Inverse(myEntrance.transform.rotation) * targetEntrance.transform.rotation;
+
+        // Aplica la rotación al segmento completo
+        transform.rotation = rotationOffset * transform.rotation;
+
+        // Calcula el desplazamiento necesario
+        Vector3 positionOffset = targetEntrance.transform.position - myEntrance.transform.position;
+
+        // Aplica el desplazamiento al segmento completo
+        transform.position += positionOffset;
+    }
+
+
+    public SectionEntrance GetEntrance(Direction dir)
+    {
+        switch (dir)
+        {
+            case Direction.Forward: return forwardEntrance;
+            case Direction.Back: return backEntrance;
+            case Direction.Left: return leftEntrance;
+            case Direction.Right: return rightEntrance;
+            default: return null;
+        }
+    }
+
+    public Direction Opposite(Direction dir)
     {
         switch (dir)
         {
@@ -42,18 +82,4 @@ public class LevelSegment : MonoBehaviour
             default: return Direction.Forward;
         }
     }
-
-    // Devuelve el offset en Vector3 para colocar el siguiente segmento
-    public Vector3 GetOffset(Direction dir, float size = 10f)
-    {
-        switch (dir)
-        {
-            case Direction.Forward: return Vector3.forward * size;
-            case Direction.Back: return Vector3.back * size;
-            case Direction.Left: return Vector3.left * size;
-            case Direction.Right: return Vector3.right * size;
-            default: return Vector3.zero;
-        }
-    }
-
 }
