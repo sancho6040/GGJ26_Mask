@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 public class LevelSegment : MonoBehaviour
 {
+    public bool IsSpawner;
+    public GameObject SpawnPoint;
+
     public SectionEntrance forwardEntrance;
     public SectionEntrance backEntrance;
     public SectionEntrance leftEntrance;
@@ -36,7 +39,7 @@ public class LevelSegment : MonoBehaviour
         print($"{gameObject.name} - posibble values: ");
         foreach (var item in possible)
         {
-            print(possible.ToString());
+            print(item.ToString());
         }
 
         return possible.Count > 0 ? possible[Random.Range(0, possible.Count)] : incomingDirection.Value;
