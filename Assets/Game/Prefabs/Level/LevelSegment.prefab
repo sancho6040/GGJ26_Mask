@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2409245196730715748}
   - component: {fileID: 6326522484709771862}
   - component: {fileID: 8020011313210666543}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Bridge R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 1800299999120959305}
   - component: {fileID: 4916304046388490156}
   - component: {fileID: 4894240654320837930}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -236,7 +236,7 @@ GameObject:
   - component: {fileID: 340667903994831194}
   - component: {fileID: 4601740224310934920}
   - component: {fileID: 872680221790790945}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Entrance - L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -341,7 +341,7 @@ GameObject:
   - component: {fileID: 6552545980017110379}
   - component: {fileID: 1148281439491443718}
   - component: {fileID: 526420587455849227}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Bridge L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -453,7 +453,7 @@ GameObject:
   - component: {fileID: 554874869880197964}
   - component: {fileID: 179649958519968482}
   - component: {fileID: 7255183875212538593}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Bridge F
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -565,7 +565,7 @@ GameObject:
   - component: {fileID: 3319872458734542333}
   - component: {fileID: 8905030216341682086}
   - component: {fileID: 4427549623317509322}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Entrance - F
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -658,6 +658,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SegmentEntrance
   isUsed: 0
+--- !u!1 &4320612314043388561
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6812537652612861962}
+  m_Layer: 3
+  m_Name: SpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6812537652612861962
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4320612314043388561}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 11.4, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 245709232008171711}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5062405257862569456
 GameObject:
   m_ObjectHideFlags: 0
@@ -670,7 +701,7 @@ GameObject:
   - component: {fileID: 94321678547836053}
   - component: {fileID: 2101760718704174043}
   - component: {fileID: 632029503484664837}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Bridge B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -782,7 +813,7 @@ GameObject:
   - component: {fileID: 4250338277801598469}
   - component: {fileID: 2562006699064266002}
   - component: {fileID: 1307052238679100769}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Entrance - B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -887,7 +918,7 @@ GameObject:
   - component: {fileID: 7451168540987189356}
   - component: {fileID: 4937016996847395508}
   - component: {fileID: 4786079803708529168}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Entrance - R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -990,7 +1021,7 @@ GameObject:
   m_Component:
   - component: {fileID: 245709232008171711}
   - component: {fileID: 862556191867835260}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: LevelSegment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1015,6 +1046,7 @@ Transform:
   - {fileID: 4428391850889723878}
   - {fileID: 2659399472269175917}
   - {fileID: 3400056261136018284}
+  - {fileID: 6812537652612861962}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &862556191867835260
@@ -1029,6 +1061,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b9dd117e29460e4eb93f0d2eae7d991, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelSegment
+  IsSpawner: 1
+  SpawnPoint: {fileID: 4320612314043388561}
   forwardEntrance: {fileID: 4427549623317509322}
   backEntrance: {fileID: 1307052238679100769}
   leftEntrance: {fileID: 872680221790790945}

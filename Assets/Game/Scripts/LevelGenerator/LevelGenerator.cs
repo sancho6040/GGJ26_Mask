@@ -11,10 +11,17 @@ public class LevelGenerator : MonoBehaviour
     private HashSet<Vector3> occupiedPositions = new HashSet<Vector3>();
     public float segmentSize = 10f; // tamaño de cada casilla
 
+    public GameObject SpawnPointInstance;
+
     void Start()
     {
         currentSegment = Instantiate(initialSegment, Vector3.zero, Quaternion.identity);
         occupiedPositions.Add(Vector3.zero);
+
+        if (currentSegment.SpawnPoint != null)
+        {
+            SpawnPointInstance = currentSegment.SpawnPoint;
+        }
 
         for (int i = 1; i < maxSegments; i++)
         {
